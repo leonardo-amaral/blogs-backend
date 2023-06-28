@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  blogs:
+    image: bitnami/postgresql
+    ports:
+    - "5432:5432"
+    environment:
+    - POSTGRESQL_USERNAME=blog-user
+    - POSTGRESQL_PASSWORD=blog-pass 
+    - POSTGRESQL_DATABASE=blog-database
