@@ -1,12 +1,19 @@
+import fastifyCors from '@fastify/cors'
 import fastifyJwt from '@fastify/jwt'
 import fastify from 'fastify'
 import { ZodError } from 'zod'
 import { env } from './env'
+import { postsRoutes } from './routes/postsRoutes'
+import { sessionsRoutes } from './routes/sessionsRoutes'
 import { userRoutes } from './routes/userRoutes'
 
 export const app = fastify()
 
-app.register(userRoutes)
+app.register(postsRoutes, { prefix: '/posts' })
+app.register(userRoutes, { prefix: '/users' })
+app.register(sessionsRoutes, { prefix: '/sessions' })
+
+app.register(fastifyCors, { origin: '*' })
 
 app.register(fastifyJwt, {
   secret: env.JWT_SECRET

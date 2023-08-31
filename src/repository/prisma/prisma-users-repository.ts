@@ -17,4 +17,12 @@ export class PrismaUsersRepository {
 
     return user
   }
+
+  async findById(id: Pick<Prisma.UserCreateInput, 'id'>) {
+    const user = await prisma.user.findUnique({
+      where: id
+    })
+
+    return user
+  }
 }

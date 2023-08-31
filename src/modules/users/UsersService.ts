@@ -1,6 +1,6 @@
 import { PrismaUsersRepository } from '@/repository/prisma/prisma-users-repository'
 import { User } from '@prisma/client'
-import { compare, hash } from 'bcryptjs'
+import { hash } from 'bcryptjs'
 
 interface CreateServiceProps {
   name: string
@@ -13,12 +13,6 @@ interface CreateServiceProps {
 interface CreateServiceResponse {
   user: User
 }
-
-interface AuthenticateProps {
-  email: string
-  password: string
-}
-
 export class UsersService {
   constructor(private usersRepository: PrismaUsersRepository) {}
   async create({
@@ -39,24 +33,8 @@ export class UsersService {
       email,
       last_name,
       username,
-      password
+      password: password_hash
     })
-
-    return {
-      user
-    }
-  }
-
-  async authenticate({ password, email }: AuthenticateProps) {
-    const user = await this.usersRepository.findByEmail({ email })
-    if (!user) {
-      throw new Error('Invalid Credentials')
-    }
-
-    const passowrdMatch = await compare(password, user.password)
-    if (!passowrdMatch) {
-      throw new Error('Invalid Credentials')
-    }
 
     return {
       user
