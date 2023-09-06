@@ -24,7 +24,7 @@ export class SessionsController {
         }
       )
 
-      return reply.status(200).send({ token })
+      return reply.status(200).send(token)
     } catch (error) {
       if (error instanceof UserAlreadyExistError) {
         return reply.status(409).send({

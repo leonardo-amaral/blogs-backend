@@ -23,13 +23,15 @@ model User {
 }
 
 model Post {
-  id        String    @unique @default(uuid())
-  title     String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  author    User      @relation(fields: [authorId], references: [id])
-  authorId  String
-  comments  Comment[]
+  id              String            @unique @default(uuid())
+  title           String
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  author          User              @relation(fields: [authorId], references: [id])
+  description     String
+  authorId        String
+  comments        Comment[]
+  PostRelCategory PostRelCategory[]
 }
 
 model Comment {
@@ -41,4 +43,19 @@ model Comment {
   postId    String
   author    User     @relation(fields: [authorId], references: [id])
   authorId  String
+}
+
+model Category {
+  id              String            @unique @default(uuid())
+  name            String
+  createdAt       DateTime          @default(now())
+  PostRelCategory PostRelCategory[]
+}
+
+model PostRelCategory {
+  id         String   @unique @default(uuid())
+  category   Category @relation(fields: [categoryId], references: [id])
+  post       Post     @relation(fields: [postId], references: [id])
+  categoryId String
+  postId     String
 }

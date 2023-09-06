@@ -3,12 +3,14 @@ import fastifyJwt from '@fastify/jwt'
 import fastify from 'fastify'
 import { ZodError } from 'zod'
 import { env } from './env'
+import { commentsRoutes } from './routes/commentsRoutes'
 import { postsRoutes } from './routes/postsRoutes'
 import { sessionsRoutes } from './routes/sessionsRoutes'
 import { userRoutes } from './routes/userRoutes'
 
 export const app = fastify()
 
+app.register(commentsRoutes, { prefix: '/comments' })
 app.register(postsRoutes, { prefix: '/posts' })
 app.register(userRoutes, { prefix: '/users' })
 app.register(sessionsRoutes, { prefix: '/sessions' })

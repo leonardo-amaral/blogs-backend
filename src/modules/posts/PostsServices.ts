@@ -7,6 +7,8 @@ interface CreatePostsProps {
   title: string
   userId: string
   data: string
+  description: string
+  categorie: string[]
 }
 
 export class PostsServices {
@@ -15,18 +17,26 @@ export class PostsServices {
     private postsRepository: PrismaPostsRepository
   ) {}
 
-  async create({ title, userId, data }: CreatePostsProps) {
+  async create({
+    title,
+    userId,
+    description,
+    data,
+    categorie
+  }: CreatePostsProps) {
     const user = await this.usersRepository.findById({ id: userId })
     if (!user) {
-      throw new Error('Invalid ID')
+      throw new Error('User not found!')
     }
 
-    const { posts } = await this.postsRepository.create({
+    const { post } = await this.postsRepository.create({
       authorId: user.id,
-      title
+      title,
+      description,
+      categories: categorie
     })
 
-    const fileName = `${posts.id}.html`
+    const fileName = `${post.id}.html`
     const filePath = path.join(__dirname, '../../data/posts/', fileName)
 
     try {
@@ -39,7 +49,7 @@ export class PostsServices {
   }
 
   async findPost({ id }: { id: string }) {
-    const { posts } = await this.postsRepository.findPostById(id)
+    const { posts } = await this.postsRepository.findPostById({ id })
 
     if (!posts) {
       throw new Error('Post not found!')
@@ -50,7 +60,8 @@ export class PostsServices {
     try {
       const htmlContent = fs.readFileSync(filePath, 'utf-8')
       return {
-        htmlContent
+        htmlContent,
+        posts
       }
     } catch (error) {
       throw `Error reading HTML file - ${error}`

@@ -5,10 +5,14 @@ export class PostsControllers {
   async create(request: FastifyRequest, reply: FastifyReply) {
     const bodySchema = z.object({
       title: z.string(),
-      data: z.string()
+      data: z.string(),
+      description: z.string(),
+      categorie: z.string().array()
     })
 
-    const { title, data } = bodySchema.parse(request.body)
+    const { title, data, description, categorie } = bodySchema.parse(
+      request.body
+    )
     try {
       await request.jwtVerify()
       const postsService = FactoryPostsService()
@@ -16,7 +20,9 @@ export class PostsControllers {
       await postsService.create({
         userId: request.user.sub,
         title,
-        data
+        data,
+        description,
+        categorie
       })
 
       return reply.status(200).send()
@@ -38,9 +44,14 @@ export class PostsControllers {
       await request.jwtVerify()
       const postsService = FactoryPostsService()
 
-      const { htmlContent } = await postsService.findPost({ id: post_id })
+      const { htmlContent, posts } = await postsService.findPost({
+        id: post_id
+      })
 
-      return reply.status(200).send({ htmlContent })
+      return reply.status(200).send({
+        htmlContent,
+        posts
+      })
     } catch (error) {
       return reply
         .status(500) // Use o código de status fornecido ou 500 por padrão

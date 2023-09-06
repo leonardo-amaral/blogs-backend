@@ -1,4 +1,4 @@
-import { SessionService } from '@/modules/sessions/SessionsService'
+import { SessionService } from '@/modules/sessions/SessionsServices'
 import { PrismaUsersRepository } from '@/repository/prisma/prisma-users-repository'
 
 export function FactorySessionsService() {
